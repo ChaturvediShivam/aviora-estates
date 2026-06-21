@@ -53,16 +53,20 @@ export function Features() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <AnimatedSection key={feature.title} delay={index * 0.08}>
-              <div className="group h-full card-luxury p-7">
-                <div className="mb-5 h-12 w-12 icon-circle-luxury">
-                  <feature.icon size={22} />
+              <div className="group h-full card-luxury p-6">
+                <div className="flex items-center gap-5 h-full">
+                  <div className="shrink-0 h-12 w-12 icon-circle-luxury">
+                    <feature.icon size={22} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-serif text-lg text-text-heading dark:text-text-inverse mb-1">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
-                  {feature.description}
-                </p>
               </div>
             </AnimatedSection>
           ))}

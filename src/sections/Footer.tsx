@@ -102,9 +102,6 @@ export function Footer() {
             </ul>
 
             <div className="mt-8 pt-8 border-t border-border-dark">
-              <p className="text-xs font-semibold uppercase tracking-lux text-muted-inverse/50 mb-3">
-                Estimated From
-              </p>
               {pricing.weekday.originalAmount && (
                 <p className="text-sm text-muted-inverse/60 line-through mb-1">{pricing.weekday.originalAmount}</p>
               )}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/Button";
-import { business, whatsappLink } from "@/lib/config";
+import { business } from "@/lib/config";
 
 interface InquiryFormProps {
   compact?: boolean;
@@ -73,7 +73,7 @@ Dates: ${safeDates}
 Guests: ${safeGuests}
 Message: ${safeMessage || "None"}`;
 
-    window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+    window.open(`/api/whatsapp?message=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
     setSubmitted(true);
   };
 

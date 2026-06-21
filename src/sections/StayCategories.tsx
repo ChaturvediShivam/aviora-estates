@@ -27,16 +27,20 @@ export function StayCategories() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {categories.map((cat, index) => (
             <AnimatedSection key={cat.title} delay={index * 0.1}>
-              <div className="group card-luxury p-6 cursor-default">
-                <div className="mb-5 h-12 w-12 icon-circle-luxury">
-                  <cat.icon size={22} />
+              <div className="group h-full card-luxury p-5 cursor-default">
+                <div className="flex items-center gap-4 h-full">
+                  <div className="shrink-0 h-12 w-12 icon-circle-luxury">
+                    <cat.icon size={22} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 mb-1 dark:text-primary/80">
+                      {cat.subtitle}
+                    </p>
+                    <h3 className="font-serif text-lg md:text-xl text-text-heading group-hover:text-primary transition-colors dark:text-text-inverse">
+                      {cat.title}
+                    </h3>
+                  </div>
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 mb-2 dark:text-primary/80">
-                  {cat.subtitle}
-                </p>
-                <h3 className="font-serif text-xl md:text-2xl text-text-heading group-hover:text-primary transition-colors dark:text-text-inverse">
-                  {cat.title}
-                </h3>
               </div>
             </AnimatedSection>
           ))}

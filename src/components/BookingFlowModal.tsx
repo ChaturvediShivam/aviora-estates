@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Minus, Plus, CalendarDays, ShieldCheck, FileText, AlertTriangle, Clock, Users, IdCard, Banknote, CheckCircle2, Send, RotateCcw } from "lucide-react";
 import { DayPicker, type DateRange } from "react-day-picker";
@@ -83,6 +83,8 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
   const [occasion, setOccasion] = useState("");
   const [arrivalTime, setArrivalTime] = useState<string>("");
   const [step1Touched, setStep1Touched] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
   // Honeypot anti-spam field — must remain empty
   const [website, setWebsite] = useState("");
 
@@ -221,6 +223,17 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
     }
   }, [isOpen, defaultPropertySlug]);
 
+  useEffect(() => {
+    if (!calendarOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setCalendarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [calendarOpen]);
+
   const today = startOfToday();
 
   const disabledDays = useCallback(
@@ -332,8 +345,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       .filter(Boolean)
       .join("\n");
 
-    const number = business.whatsapp.number.replace(/\D/g, "");
-    return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+    return `/api/whatsapp?message=${encodeURIComponent(message)}`;
   }, [adults, children, pets, range, arrivalTime, referenceId, selectedProperty, pricingEstimate, occasion, guestName, guestPhone, guestEmail]);
 
   const handleNext = useCallback(() => {
@@ -681,99 +693,106 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     <p className="text-sm text-muted dark:text-muted-inverse">{selectedProperty.location}</p>
                   </div>
 
-                  <div className="rounded-2xl border border-border-light bg-surface-card p-4 dark:bg-surface-dark/50 dark:border-border-dark">
-                    {isLoadingCalendar ? (
-                      <div className="py-12 text-center text-muted dark:text-muted-inverse">
-                        <CalendarDays className="mx-auto mb-3 animate-pulse" size={32} />
-                        Loading availability…
-                      </div>
-                    ) : (
-                      <DayPicker
-                        mode="range"
-                        selected={range}
-                        onSelect={handleSelect}
-                        disabled={disabledDays}
-                        numberOfMonths={1}
-                        showOutsideDays={false}
-                        className="booking-calendar"
-                        classNames={{
-                          today: "text-primary font-semibold",
-                          selected: "bg-primary text-text-inverse rounded-full",
-                          range_start: "bg-primary text-text-inverse rounded-full",
-                          range_end: "bg-primary text-text-inverse rounded-full",
-                          range_middle: "bg-primary/20 text-primary",
-                          disabled: "text-muted/30 line-through bg-danger-soft dark:text-muted-inverse/30 dark:bg-danger-soft",
-                          day: "h-10 w-10 text-sm font-medium text-text hover:bg-primary/10 rounded-full transition-colors dark:text-text-inverse dark:hover:bg-primary/20 aria-selected:text-text-inverse",
-                          day_button: "h-10 w-10",
-                          button_next: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
-                          button_previous: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
-                          caption_label: "text-text dark:text-text-inverse font-serif",
-                          weekday: "text-muted/70 dark:text-muted-inverse/70 text-xs font-medium uppercase tracking-wider",
-                        }}
-                        modifiers={{
-                          weekend: (date) => isWeekend(date),
-                        }}
-                        modifiersClassNames={{
-                          weekend: "text-primary font-semibold",
-                        }}
-                      />
-                    )}
+                  <div className="space-y-3">
+                    <label className="text-sm font-medium text-muted dark:text-muted-inverse">
+                      Select dates
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setCalendarOpen(true)}
+                        className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-in</p>
+                        <p className="font-medium text-text dark:text-text-inverse">
+                          {range?.from ? formatDate(range.from) : "Select date"}
+                        </p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalendarOpen(true)}
+                        className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-out</p>
+                        <p className="font-medium text-text dark:text-text-inverse">
+                          {range?.to ? formatDate(range.to) : "Select date"}
+                        </p>
+                      </button>
+                    </div>
                   </div>
 
-                  <p className="text-center text-xs text-muted/70 dark:text-muted-inverse/70">
-                    {!hasCalendarUrl
-                      ? "Availability calendar is open. Owner confirms final dates after review."
-                      : "Blocked dates are unavailable. Select an open range."}
-                  </p>
+                  {calendarOpen && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-secondary/50 p-4 backdrop-blur-sm">
+                      <motion.div
+                        ref={calendarRef}
+                        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative w-full max-w-sm rounded-3xl border border-border-light bg-surface-card p-6 shadow-2xl dark:border-border-dark dark:bg-surface-dark"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setCalendarOpen(false)}
+                          className="absolute right-4 top-4 rounded-full p-2 text-muted transition-colors hover:bg-text/5 hover:text-text dark:text-muted-inverse dark:hover:bg-text-inverse/10"
+                          aria-label="Close calendar"
+                        >
+                          <X size={20} />
+                        </button>
+                        <p className="mb-5 font-serif text-xl text-text-heading dark:text-text-inverse">
+                          Select your dates
+                        </p>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!range?.from) {
-                          const firstAvailable = [...Array(60)].map((_, i) => {
-                            const d = new Date(today);
-                            d.setDate(d.getDate() + i);
-                            return d;
-                          }).find((d) => !disabledDays(d));
-                          if (firstAvailable) setRange({ from: firstAvailable });
-                        }
-                      }}
-                      className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
-                    >
-                      <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-in</p>
-                      <p className="font-medium text-text dark:text-text-inverse">
-                        {range?.from ? formatDate(range.from) : "Select date"}
-                      </p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!range?.from) {
-                          const firstAvailable = [...Array(60)].map((_, i) => {
-                            const d = new Date(today);
-                            d.setDate(d.getDate() + i);
-                            return d;
-                          }).find((d) => !disabledDays(d));
-                          if (firstAvailable) setRange({ from: firstAvailable });
-                        } else if (!range?.to && range.from) {
-                          const fromDate = range.from;
-                          const nextAvailable = [...Array(30)].map((_, i) => {
-                            const d = new Date(fromDate);
-                            d.setDate(d.getDate() + 1 + i);
-                            return d;
-                          }).find((d) => !disabledDays(d) && !hasBookedDateInRange(fromDate, d, bookedRanges));
-                          if (nextAvailable) setRange({ from: fromDate, to: nextAvailable });
-                        }
-                      }}
-                      className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
-                    >
-                      <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-out</p>
-                      <p className="font-medium text-text dark:text-text-inverse">
-                        {range?.to ? formatDate(range.to) : "Select date"}
-                      </p>
-                    </button>
-                  </div>
+                        {isLoadingCalendar ? (
+                          <div className="py-12 text-center text-muted dark:text-muted-inverse">
+                            <CalendarDays className="mx-auto mb-3 animate-pulse" size={32} />
+                            Loading availability…
+                          </div>
+                        ) : (
+                          <DayPicker
+                            mode="range"
+                            selected={range}
+                            onSelect={(selected) => {
+                              handleSelect(selected);
+                              if (selected?.from && selected?.to) {
+                                setCalendarOpen(false);
+                              }
+                            }}
+                            disabled={disabledDays}
+                            numberOfMonths={1}
+                            showOutsideDays={false}
+                            className="booking-calendar"
+                            classNames={{
+                              today: "text-primary font-semibold",
+                              selected: "bg-primary text-text-inverse rounded-full",
+                              range_start: "bg-primary text-text-inverse rounded-full",
+                              range_end: "bg-primary text-text-inverse rounded-full",
+                              range_middle: "bg-primary/20 text-primary",
+                              disabled: "text-muted/30 line-through bg-danger-soft dark:text-muted-inverse/30 dark:bg-danger-soft",
+                              day: "h-10 w-10 text-sm font-medium text-text hover:bg-primary/10 rounded-full transition-colors dark:text-text-inverse dark:hover:bg-primary/20 aria-selected:text-text-inverse",
+                              day_button: "h-10 w-10",
+                              button_next: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
+                              button_previous: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
+                              caption_label: "text-text dark:text-text-inverse font-serif",
+                              weekday: "text-muted/70 dark:text-muted-inverse/70 text-xs font-medium uppercase tracking-wider",
+                            }}
+                            modifiers={{
+                              weekend: (date) => isWeekend(date),
+                            }}
+                            modifiersClassNames={{
+                              weekend: "text-primary font-semibold",
+                            }}
+                          />
+                        )}
+
+                        <p className="mt-4 text-center text-xs text-muted/70 dark:text-muted-inverse/70">
+                          {!hasCalendarUrl
+                            ? "Availability calendar is open. Owner confirms final dates after review."
+                            : "Blocked dates are unavailable. Select an open range."}
+                        </p>
+                      </motion.div>
+                    </div>
+                  )}
 
                   <div className="space-y-3">
                     <label htmlFor="arrival-time" className="text-sm font-medium text-muted dark:text-muted-inverse">

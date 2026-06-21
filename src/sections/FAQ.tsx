@@ -35,9 +35,9 @@ const faqs = [
       "Cancellations made at least 1 day before check-in are eligible for a full refund. Cancellations within 1 day of check-in receive a partial refund based on the timeline.",
   },
   {
-    question: "Is outside food allowed?",
+    question: "Is BBQ or bonfire available?",
     answer:
-      "Yes. The villa has a fully functional kitchen, outdoor dining area, and BBQ setup. Outside food and private catering are welcome; we only ask that you dispose of waste properly.",
+      "Yes. A BBQ grill and winter bonfire are available on request. Bonfire charges are exclusive of the booking cost and arranged directly with the host.",
   },
 ];
 

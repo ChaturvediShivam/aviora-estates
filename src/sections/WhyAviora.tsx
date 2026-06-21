@@ -47,14 +47,18 @@ export function WhyAviora() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {reasons.map((reason, index) => (
             <AnimatedSection key={reason.title} delay={index * 0.1}>
-              <div className="group h-full card-luxury p-6">
-                <div className="mb-5 h-12 w-12 icon-circle-luxury">
-                  <reason.icon size={22} />
+              <div className="group h-full card-luxury p-5">
+                <div className="flex items-center gap-4 h-full">
+                  <div className="shrink-0 h-12 w-12 icon-circle-luxury">
+                    <reason.icon size={22} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-serif text-lg text-text-heading mb-1 dark:text-text-inverse">{reason.title}</h3>
+                    <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
+                      {reason.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="font-serif text-xl text-text-heading mb-2 dark:text-text-inverse">{reason.title}</h3>
-                <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
-                  {reason.description}
-                </p>
               </div>
             </AnimatedSection>
           ))}

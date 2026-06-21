@@ -50,9 +50,7 @@ export default function ContactPage() {
                 dates and number of guests.
               </p>
               <a
-                href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}?text=${encodeURIComponent(business.whatsapp.message)}`}
-                target="_blank"
-                rel="noreferrer"
+                href={`/api/whatsapp?message=${encodeURIComponent(business.whatsapp.message)}`}
                 className="inline-flex items-center gap-3 rounded-full bg-[#25D366] px-7 py-3 text-sm font-medium text-white hover:brightness-110 transition-all"
               >
                 <MessageCircle size={18} fill="currentColor" />

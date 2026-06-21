@@ -50,11 +50,11 @@ export function TrustSection() {
         <div className="grid md:grid-cols-2 gap-5">
           {trustItems.map((item, index) => (
             <AnimatedSection key={item.title} delay={index * 0.1}>
-              <div className="group flex gap-5 card-luxury p-6">
+              <div className="group flex items-center gap-5 h-full card-luxury p-6">
                 <div className="shrink-0 h-12 w-12 icon-circle-luxury">
                   <item.icon size={22} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-1">
                     {item.title}
                   </h3>

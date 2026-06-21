@@ -30,15 +30,19 @@ export function HouseRules() {
             return (
               <AnimatedSection key={rule.title} delay={index * 0.1}>
                 <div className="group h-full card-luxury p-6">
-                  <div className="mb-6 h-14 w-14 icon-circle-luxury">
-                    <Icon size={24} />
+                  <div className="flex items-center gap-5 h-full">
+                    <div className="shrink-0 h-14 w-14 icon-circle-luxury">
+                      <Icon size={24} />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-serif text-lg text-text-heading mb-1 dark:text-text-inverse">
+                        {rule.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
+                        {rule.description}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="font-serif text-xl text-text-heading mb-3 dark:text-text-inverse">
-                    {rule.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
-                    {rule.description}
-                  </p>
                 </div>
               </AnimatedSection>
             );

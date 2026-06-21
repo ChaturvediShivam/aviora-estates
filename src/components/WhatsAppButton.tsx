@@ -7,9 +7,7 @@ import { business } from "@/lib/config";
 export function WhatsAppButton() {
   return (
     <motion.a
-      href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}?text=${encodeURIComponent(
-        business.whatsapp.message
-      )}`}
+      href={`/api/whatsapp?message=${encodeURIComponent(business.whatsapp.message)}`}
       target="_blank"
       rel="noreferrer"
       initial={{ scale: 0, opacity: 0 }}

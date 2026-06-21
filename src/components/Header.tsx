@@ -70,9 +70,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
           <Link
-            href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}?text=${encodeURIComponent(
-              business.whatsapp.message
-            )}`}
+            href={`/api/whatsapp?message=${encodeURIComponent(business.whatsapp.message)}`}
             target="_blank"
             rel="noreferrer"
             className={cn(
@@ -119,9 +117,7 @@ export function Header() {
             </Link>
           ))}
           <Link
-            href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}?text=${encodeURIComponent(
-              business.whatsapp.message
-            )}`}
+            href={`/api/whatsapp?message=${encodeURIComponent(business.whatsapp.message)}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => setOpen(false)}
