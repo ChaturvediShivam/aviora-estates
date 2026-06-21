@@ -193,8 +193,7 @@ export const expansion = {
 
 export function whatsappLink(message?: string) {
   const text = encodeURIComponent(message || business.whatsapp.message);
-  const number = business.whatsapp.number.replace(/\D/g, "");
-  return `https://wa.me/${number}?text=${text}`;
+  return `/api/whatsapp?message=${text}`;
 }
 
 // -----------------------------------------------------------------------------

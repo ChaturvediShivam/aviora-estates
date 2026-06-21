@@ -30,9 +30,7 @@ export function Footer() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noreferrer"
+                href={`/api/whatsapp?message=${encodeURIComponent(business.whatsapp.message)}`}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-text-inverse hover:bg-primary-hover transition-colors"
               >
                 <Phone size={16} />

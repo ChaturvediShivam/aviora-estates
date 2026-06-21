@@ -63,8 +63,7 @@ export function WaitlistModal({ property, isOpen, onClose }: WaitlistModalProps)
       .filter(Boolean)
       .join("\n");
 
-    const number = business.whatsapp.number.replace(/\D/g, "");
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+    const url = `/api/whatsapp?message=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
     onClose();
   };

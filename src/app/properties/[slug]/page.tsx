@@ -346,9 +346,7 @@ export default async function PropertyDetailPage({
               className="px-5 py-2.5 text-xs"
             />
             <a
-              href={`https://wa.me/${business.whatsapp.number.replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I'd like to enquire about ${property.name}.`)}`}
-              target="_blank"
-              rel="noreferrer"
+              href={`/api/whatsapp?message=${encodeURIComponent(`Hi, I'd like to enquire about ${property.name}.`)}`}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-white shadow-md hover:brightness-110"
               aria-label="Chat on WhatsApp"
             >
