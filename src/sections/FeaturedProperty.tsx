@@ -81,24 +81,24 @@ function ComingSoonCard({ property }: { property: Property }) {
   const image = property.heroImages[0];
 
   return (
-    <div className="group card-luxury overflow-hidden">
-      <div className="relative overflow-hidden">
+    <div className="group card-luxury overflow-hidden flex flex-col h-full">
+      <div className="relative overflow-hidden aspect-[4/3]">
         <ImageCard
           src={image?.src || "/images/placeholder/coming-soon.svg"}
           alt={image?.alt || property.name}
           aspect="landscape"
-          className="rounded-none"
+          className="rounded-none h-full w-full"
         />
         <span className="absolute top-4 left-4 z-10 inline-block rounded-full bg-secondary/70 backdrop-blur-sm px-3 py-1 text-xs font-semibold uppercase tracking-lux text-text-inverse">
           {property.badge || "Coming Soon"}
         </span>
       </div>
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-1">
         <p className="text-xs font-semibold uppercase tracking-lux text-muted dark:text-muted-inverse mb-2">{property.location}</p>
         <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-2">
           {property.name}
         </h3>
-        <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
+        <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse mt-auto">
           {property.tagline}
         </p>
       </div>

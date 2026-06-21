@@ -23,7 +23,7 @@ export function Button({
 
   const variants = {
     primary:
-      "bg-primary text-text-inverse hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5",
+      "bg-primary text-text-inverse hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5 dark:bg-primary dark:text-text-inverse dark:hover:bg-primary-hover",
     outline:
       "border border-accent text-primary hover:bg-primary hover:text-text-inverse hover:border-primary dark:border-border-dark dark:text-text-inverse dark:hover:text-text-inverse dark:hover:border-primary",
     ghost: "text-primary hover:bg-primary/5 dark:text-text-inverse dark:hover:bg-primary/15",

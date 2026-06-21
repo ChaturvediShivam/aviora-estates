@@ -72,7 +72,7 @@ export default async function PropertyDetailPage({
             )}
 
             <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <PropertyDetailClient property={property} />
+              <PropertyDetailClient property={property} buttonLabel="Request Availability" variant="primary" />
             </div>
           </AnimatedSection>
         </Container>

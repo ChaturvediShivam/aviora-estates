@@ -25,6 +25,16 @@ export function PropertyDetailClient({
   const [isOpen, setIsOpen] = useState(false);
   const isLive = property.status === "live";
 
+  const button = (
+    <Button
+      onClick={() => setIsOpen(true)}
+      variant={variant}
+      className={className}
+    >
+      {buttonLabel}
+    </Button>
+  );
+
   if (href) {
     return (
       <Button href={href} variant={variant} className={className}>
@@ -36,13 +46,7 @@ export function PropertyDetailClient({
   if (!isLive) {
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          variant={variant}
-          className={className}
-        >
-          {buttonLabel}
-        </Button>
+        {button}
         <WaitlistModal
           property={property}
           isOpen={isOpen}
@@ -54,13 +58,7 @@ export function PropertyDetailClient({
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant={variant}
-        className={className}
-      >
-        {buttonLabel}
-      </Button>
+      {button}
       <BookingFlowModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
