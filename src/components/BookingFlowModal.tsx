@@ -18,10 +18,12 @@ interface BookingFlowModalProps {
   defaultPropertySlug?: string;
 }
 
-const MAX_GUESTS = 16;
+const MAX_ADULTS = 16;
+const ABSOLUTE_MAX_ADULTS = 20;
 const STORAGE_KEY = "aviora-booking-draft";
 const BOOKING_ID_KEY = "aviora-booking-counter";
 const DRAFT_TTL_MS = 24 * 60 * 60 * 1000;
+const PET_PRICE = 500;
 
 const OCCASIONS = [
   "Weekend getaway",
@@ -277,6 +279,8 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
   const totalGuests = adults + children;
   const extraAdults = Math.max(0, adults - capacity.baseGuests);
   const exceedsBaseOccupancy = extraAdults > 0;
+  const exceedsAdultCapacity = adults > MAX_ADULTS;
+  const exceedsAbsoluteAdultLimit = adults > ABSOLUTE_MAX_ADULTS;
 
   const isWeekendNight = (date: Date) => {
     const day = getDay(date);
@@ -294,6 +298,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
     const weekdayPrice = parseAmount(pricing.weekday.amount);
     const weekendPrice = parseAmount(pricing.weekend.amount);
     const extraGuestPrice = parseAmount(pricing.extraGuest.amount);
+    const petTotal = pets * PET_PRICE * totalNights;
 
     let weekdayNights = 0;
     let weekendNights = 0;
@@ -316,7 +321,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
 
     const extraGuestTotal = extraAdults * extraGuestPrice * totalNights;
     const securityDeposit = parseAmount(pricing.securityDeposit.amount);
-    const totalPayableAfterApproval = stayEstimate + extraGuestTotal + securityDeposit;
+    const totalPayableAfterApproval = stayEstimate + extraGuestTotal + petTotal + securityDeposit;
 
     return {
       totalNights,
@@ -330,10 +335,11 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       stayEstimate,
       extraAdults,
       extraGuestTotal,
+      petTotal,
       securityDeposit,
       totalPayableAfterApproval,
     };
-  }, [adults, range, extraAdults]);
+  }, [adults, range, extraAdults, pets]);
 
   const generateWhatsAppUrl = useCallback(() => {
     const host = selectedProperty.hostName || "Alok";
@@ -359,7 +365,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       arrivalTime ? `Expected arrival: ${arrivalTime}` : "",
       "",
       pricingEstimate
-        ? `Estimated total: ₹${pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")} for ${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""} (includes discounted stay, extra adults, and refundable security deposit of ₹${pricingEstimate.securityDeposit.toLocaleString("en-IN")}). Final pricing to be confirmed by owner after review.`
+        ? `Estimated total: ₹${pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")} for ${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""} (includes discounted stay, extra adults, pets, and refundable security deposit of ₹${pricingEstimate.securityDeposit.toLocaleString("en-IN")}). Final pricing to be confirmed by owner after review.`
         : "",
       `Booking ID: ${bookingId}`,
       "",
@@ -400,11 +406,13 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
     value,
     onChange,
     min = 0,
+    max = MAX_ADULTS,
   }: {
     label: string;
     value: number;
     onChange: (v: number) => void;
     min?: number;
+    max?: number;
   }) => (
     <div className="flex items-center justify-between rounded-2xl border border-border-light bg-surface-card p-4 dark:bg-surface-dark/50 dark:border-border-dark">
       <span className="font-medium text-text dark:text-text-inverse">{label}</span>
@@ -421,8 +429,8 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
         <span className="w-6 text-center font-medium text-text dark:text-text-inverse">{value}</span>
         <button
           type="button"
-          onClick={() => onChange(Math.min(MAX_GUESTS, value + 1))}
-          disabled={value >= MAX_GUESTS}
+          onClick={() => onChange(Math.min(max, value + 1))}
+          disabled={value >= max}
           className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-light text-text hover:border-primary hover:text-primary disabled:opacity-30 dark:border-border-dark dark:text-text-inverse"
           aria-label={`Increase ${label}`}
         >
@@ -658,14 +666,14 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                       </div>
                       <span className={cn(
                         "text-sm font-semibold tabular-nums",
-                        totalGuests > capacity.baseGuests ? "text-danger" : "text-primary"
+                        exceedsAdultCapacity ? "text-danger" : "text-primary"
                       )}>
-                        {totalGuests} / {capacity.baseGuests}
+                        {adults} / {capacity.baseGuests}
                       </span>
                     </div>
-                    <Counter label="Adults" value={adults} onChange={setAdults} min={1} />
+                    <Counter label="Adults" value={adults} onChange={setAdults} min={1} max={ABSOLUTE_MAX_ADULTS} />
                     <Counter label="Children" value={children} onChange={setChildren} />
-                    <Counter label="Pets" value={pets} onChange={setPets} />
+                    <Counter label="Pets" value={pets} onChange={setPets} max={6} />
                   </div>
 
                   {exceedsBaseOccupancy && (
@@ -677,11 +685,20 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     </div>
                   )}
 
-                  {totalGuests > MAX_GUESTS && (
+                  {exceedsAdultCapacity && (
                     <div className="flex items-start gap-3 rounded-2xl border border-danger bg-danger-soft p-4 dark:bg-danger/20">
                       <AlertTriangle size={20} className="mt-0.5 shrink-0 text-danger" />
                       <p className="text-sm text-text dark:text-text-inverse">
-                        Total guests cannot exceed the maximum capacity of {MAX_GUESTS}.
+                        Standard night stay capacity is {MAX_ADULTS} adults. Please contact us for larger groups.
+                      </p>
+                    </div>
+                  )}
+
+                  {exceedsAbsoluteAdultLimit && (
+                    <div className="flex items-start gap-3 rounded-2xl border border-danger bg-danger-soft p-4 dark:bg-danger/20">
+                      <AlertTriangle size={20} className="mt-0.5 shrink-0 text-danger" />
+                      <p className="text-sm text-text dark:text-text-inverse">
+                        Adult guests cannot exceed {ABSOLUTE_MAX_ADULTS}.
                       </p>
                     </div>
                   )}
@@ -689,7 +706,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                   <div className="pt-4">
                     <button
                       onClick={handleNext}
-                      disabled={totalGuests > MAX_GUESTS}
+                      disabled={exceedsAbsoluteAdultLimit}
                       className="w-full rounded-full bg-primary px-7 py-3.5 text-sm font-medium tracking-wide text-text-inverse transition-all hover:bg-primary-hover hover:shadow-lg disabled:cursor-not-allowed disabled:bg-primary/40"
                     >
                       Next
@@ -947,7 +964,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     />
                     <LineItem
                       label={`Pets (${pets})`}
-                      value="Included"
+                      value={pets > 0 ? `₹${pricingEstimate.petTotal.toLocaleString("en-IN")}` : "Included"}
                     />
                     <LineItem
                       label="Refundable Security Deposit"
@@ -959,7 +976,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                         <span className="text-base font-semibold text-primary">₹{pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")}</span>
                       </div>
                       <p className="text-xs text-muted/70 dark:text-muted-inverse/70">
-                        Includes discounted stay, extra adults, and refundable security deposit. Final pricing is confirmed after owner review.
+                        Includes discounted stay, extra adults, pets, and refundable security deposit. Final pricing is confirmed after owner review.
                       </p>
                     </div>
                   </div>

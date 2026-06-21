@@ -12,6 +12,7 @@ import { GuestStoriesPlaceholder } from "@/components/GuestStoriesPlaceholder";
 import { PropertyHighlights } from "@/sections/PropertyHighlights";
 import { NearbyLocations } from "@/sections/NearbyLocations";
 import { RoomBreakdown } from "@/sections/RoomBreakdown";
+import { PropertyHeader } from "@/components/PropertyHeader";
 import { business, properties, getPropertyBySlug, pricing, reviews, capacity } from "@/lib/config";
 import { User, Clock, ShieldCheck, MessageCircle } from "lucide-react";
 
@@ -56,6 +57,7 @@ export default async function PropertyDetailPage({
 
   return (
     <>
+      <PropertyHeader forceDark={isLive} />
       <section className="pt-32 pb-12 md:pt-40 md:pb-16">
         <Container>
           <AnimatedSection className="max-w-4xl">

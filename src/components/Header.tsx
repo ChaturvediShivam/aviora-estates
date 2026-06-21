@@ -16,7 +16,7 @@ const nav = [
   { label: "Contact", href: "/contact" },
 ];
 
-export function Header() {
+export function Header({ forceDark = false }: { forceDark?: boolean }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -26,13 +26,18 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Day-mode readability override for bright hero pages (e.g. Noida estate).
+  // Does not affect dark mode colors.
+  const useDark = forceDark && !scrolled;
+
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out",
         scrolled
           ? "bg-surface/95 backdrop-blur-xl border-b border-border-light/60 shadow-[0_4px_30px_rgba(21,21,21,0.06)] dark:bg-surface-dark/90 dark:border-border-dark/60"
-          : "bg-transparent"
+          : "bg-transparent",
+        useDark ? "bg-surface/95 backdrop-blur-xl border-b border-border-light/60" : ""
       )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
@@ -43,7 +48,7 @@ export function Header() {
           <Logo
             className={cn(
               "transition-colors duration-500",
-              scrolled || open
+              scrolled || open || useDark
                 ? "text-text-heading dark:text-text-inverse"
                 : "text-text-inverse"
             )}
@@ -57,7 +62,7 @@ export function Header() {
               href={item.href}
               className={cn(
                 "relative text-sm font-medium tracking-wide transition-colors duration-300 py-2",
-                scrolled
+                scrolled || useDark
                   ? "text-muted hover:text-primary dark:text-muted-inverse dark:hover:text-text-inverse"
                   : "text-text-inverse/90 hover:text-text-inverse"
               )}
@@ -75,7 +80,7 @@ export function Header() {
             rel="noreferrer"
             className={cn(
               "rounded-full px-6 py-2.5 text-sm font-medium transition-colors duration-300",
-              scrolled
+              scrolled || useDark
                 ? "bg-primary text-text-inverse hover:bg-primary-hover"
                 : "bg-text-inverse text-text-heading hover:bg-surface-elevated"
             )}
@@ -90,7 +95,7 @@ export function Header() {
             onClick={() => setOpen(!open)}
             className={cn(
               "p-2 transition-colors",
-              scrolled ? "text-text dark:text-text-inverse" : "text-text-inverse"
+              scrolled || useDark ? "text-text dark:text-text-inverse" : "text-text-inverse"
             )}
             aria-label="Toggle menu"
           >

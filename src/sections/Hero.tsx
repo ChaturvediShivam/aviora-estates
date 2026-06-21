@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { Button } from "@/components/Button";
 import { ChevronDown } from "lucide-react";
 import { TrustBadge } from "@/components/TrustBadge";
 import { BookingFlowModal } from "@/components/BookingFlowModal";
@@ -84,29 +83,7 @@ export function Hero() {
             celebration, and meaningful escape across India.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.8 }}
-            className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Button
-              onClick={() => setIsBookingOpen(true)}
-              variant="primary"
-              className="px-8"
-            >
-              Request Availability
-            </Button>
-            <Button
-              href="/properties/noida-estate"
-              variant="outline"
-              className="border-text-inverse/60 text-text-inverse bg-text-inverse/10 backdrop-blur-sm hover:bg-text-inverse hover:text-text-heading px-8"
-            >
-              Explore the Collection
-            </Button>
-          </motion.div>
-
-          <div className="mt-9 md:mt-12">
+          <div className="mt-12 md:mt-16">
             <TrustBadge />
           </div>
         </motion.div>
