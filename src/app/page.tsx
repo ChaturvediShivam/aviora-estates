@@ -10,6 +10,8 @@ import { BookingProcess } from "@/sections/BookingProcess";
 import { Expansion } from "@/sections/Expansion";
 import { BookingCTA } from "@/components/BookingCTA";
 import { CTA } from "@/sections/CTA";
+import { Features } from "@/sections/Features";
+import { FAQ } from "@/sections/FAQ";
 import { business } from "@/lib/config";
 import type { Metadata } from "next";
 
@@ -24,15 +26,15 @@ export default function HomePage() {
     <>
       <Hero />
       <BrandIntro />
+      <Features />
       <FeaturedProperty />
       <BookingPolicy />
       <HouseRules />
-      <BookingCTA variant="dark" />
       <WhyAviora />
       <StayCategories />
       <TrustSection />
       <BookingProcess />
-      <Expansion />
+      <FAQ />
       <CTA />
     </>
   );

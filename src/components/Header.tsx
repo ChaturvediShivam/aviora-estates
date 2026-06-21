@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
+import { Logo } from "./Logo";
 import { business } from "@/lib/config";
 
 const nav = [
@@ -29,25 +29,25 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out",
         scrolled
-          ? "bg-surface/95 backdrop-blur-md shadow-sm dark:bg-surface-dark/90"
-          : "bg-transparent"
+          ? "bg-surface/90 backdrop-blur-xl border-b border-border-light/60 shadow-[0_4px_30px_rgba(21,21,21,0.06)] dark:bg-surface-dark/85 dark:border-border-dark/60"
+          : "bg-gradient-to-b from-secondary/40 via-secondary/10 to-transparent backdrop-blur-[2px]"
       )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full border border-primary/20">
-            <Image
-              src={business.logo}
-              alt={business.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-          <span className="font-serif text-xl font-medium text-text-heading dark:text-text-inverse">
-            {business.name}
-          </span>
+        <Link
+          href="/"
+          className="group relative flex h-8 md:h-9 items-center transition-opacity duration-300 hover:opacity-80"
+        >
+          <Logo
+            className={cn(
+              "transition-colors duration-500",
+              scrolled || open
+                ? "text-text-heading dark:text-text-inverse"
+                : "text-text-inverse"
+            )}
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -55,7 +55,12 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="relative text-sm font-medium tracking-wide text-muted hover:text-primary transition-colors duration-300 py-2 dark:text-muted-inverse dark:hover:text-text-inverse"
+              className={cn(
+                "relative text-sm font-medium tracking-wide transition-colors duration-300 py-2",
+                scrolled
+                  ? "text-muted hover:text-primary dark:text-muted-inverse dark:hover:text-text-inverse"
+                  : "text-text-inverse/90 hover:text-text-inverse"
+              )}
             >
               {item.label}
             </Link>
@@ -70,7 +75,12 @@ export function Header() {
             )}`}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-text-inverse hover:bg-primary-hover transition-colors duration-300"
+            className={cn(
+              "rounded-full px-6 py-2.5 text-sm font-medium transition-colors duration-300",
+              scrolled
+                ? "bg-primary text-text-inverse hover:bg-primary-hover"
+                : "bg-text-inverse text-text-heading hover:bg-surface-elevated"
+            )}
           >
             Submit Stay Request
           </Link>
@@ -80,7 +90,10 @@ export function Header() {
           <ThemeToggle />
           <button
             onClick={() => setOpen(!open)}
-            className="p-2 text-text dark:text-text-inverse"
+            className={cn(
+              "p-2 transition-colors",
+              scrolled ? "text-text dark:text-text-inverse" : "text-text-inverse"
+            )}
             aria-label="Toggle menu"
           >
             {open ? <X size={24} /> : <Menu size={24} />}
@@ -90,7 +103,7 @@ export function Header() {
 
       <div
         className={cn(
-          "md:hidden absolute inset-x-0 top-20 overflow-hidden bg-surface dark:bg-surface-dark border-b border-border-light dark:border-border-dark transition-all duration-500",
+          "md:hidden absolute inset-x-0 top-20 overflow-hidden bg-surface/95 backdrop-blur-xl dark:bg-surface-dark/95 border-b border-border-light dark:border-border-dark transition-all duration-500",
           open ? "max-h-[28rem] opacity-100" : "max-h-0 opacity-0"
         )}
       >

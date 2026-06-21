@@ -15,26 +15,26 @@ const categories = [
 
 export function StayCategories() {
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-luxury-gradient dark:bg-luxury-gradient-dark">
       <Container>
-        <AnimatedSection className="max-w-3xl mb-16 md:mb-24">
-          <SectionLabel className="mb-5">Curated Stays</SectionLabel>
+        <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
+          <SectionLabel className="mb-4">Curated Stays</SectionLabel>
           <SectionHeading size="lg">
             A villa for every kind of pause.
           </SectionHeading>
         </AnimatedSection>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {categories.map((cat, index) => (
             <AnimatedSection key={cat.title} delay={index * 0.1}>
-              <div className="group p-8 rounded-2xl border border-border-light bg-surface-card hover:border-accent hover:bg-primary/5 transition-all duration-500 cursor-default dark:bg-surface-dark/60 dark:border-border-dark dark:hover:bg-surface-dark/80">
-                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500 dark:bg-primary/20 dark:text-primary">
-                  <cat.icon size={24} />
+              <div className="group p-6 rounded-2xl border border-border-light bg-surface-card hover:border-accent hover:bg-primary/5 hover:shadow-sm transition-all duration-500 cursor-default dark:bg-surface-dark/60 dark:border-border-dark dark:hover:bg-surface-dark/80">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500 dark:bg-primary/20 dark:text-primary">
+                  <cat.icon size={22} />
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 mb-3 dark:text-primary/80">
+                <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 mb-2 dark:text-primary/80">
                   {cat.subtitle}
                 </p>
-                <h3 className="font-serif text-2xl md:text-3xl text-text-heading group-hover:text-primary transition-colors dark:text-text-inverse">
+                <h3 className="font-serif text-xl md:text-2xl text-text-heading group-hover:text-primary transition-colors dark:text-text-inverse">
                   {cat.title}
                 </h3>
               </div>

@@ -12,7 +12,7 @@ export function CTA() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-luxury-gradient py-20 md:py-28 dark:bg-luxury-gradient-dark">
+      <section className="relative overflow-hidden bg-surface dark:bg-surface-dark py-16 md:py-24">
         <div
           className="absolute inset-0 opacity-[0.04] bg-cover bg-center"
           style={{ backgroundImage: "url('/images/gallery/villa-front-facade.jpg')" }}

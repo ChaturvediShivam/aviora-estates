@@ -8,7 +8,7 @@ import { expansion, business } from "@/lib/config";
 
 export function Expansion() {
   return (
-    <section className="section-padding bg-[#EFE9DE] dark:bg-[#1A1A1A]">
+    <section className="section-padding bg-warm-beige dark:bg-warm-beige-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-16 md:mb-24">
           <SectionLabel className="mb-5">Coming Soon</SectionLabel>

@@ -682,15 +682,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                   </div>
 
                   <div className="rounded-2xl border border-border-light bg-surface-card p-4 dark:bg-surface-dark/50 dark:border-border-dark">
-                    {!hasCalendarUrl ? (
-                      <div className="py-10 text-center">
-                        <CalendarDays className="mx-auto mb-3 text-primary/70 dark:text-primary" size={32} />
-                        <p className="font-medium text-text dark:text-text-inverse mb-1">Availability will be confirmed by the host</p>
-                        <p className="text-sm text-muted dark:text-muted-inverse max-w-xs mx-auto">
-                          Select your preferred dates. The owner will confirm availability after receiving your inquiry.
-                        </p>
-                      </div>
-                    ) : isLoadingCalendar ? (
+                    {isLoadingCalendar ? (
                       <div className="py-12 text-center text-muted dark:text-muted-inverse">
                         <CalendarDays className="mx-auto mb-3 animate-pulse" size={32} />
                         Loading availability…
@@ -711,29 +703,76 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                           range_end: "bg-primary text-text-inverse rounded-full",
                           range_middle: "bg-primary/20 text-primary",
                           disabled: "text-muted/30 line-through bg-danger-soft dark:text-muted-inverse/30 dark:bg-danger-soft",
-                          day: "h-10 w-10 text-sm font-medium text-success hover:bg-primary/10 rounded-full transition-colors dark:text-success/90 dark:hover:bg-primary/20",
+                          day: "h-10 w-10 text-sm font-medium text-text hover:bg-primary/10 rounded-full transition-colors dark:text-text-inverse dark:hover:bg-primary/20 aria-selected:text-text-inverse",
+                          day_button: "h-10 w-10",
                           button_next: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
                           button_previous: "inline-flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-text/10 dark:text-text-inverse dark:hover:bg-text-inverse/10",
                           caption_label: "text-text dark:text-text-inverse font-serif",
                           weekday: "text-muted/70 dark:text-muted-inverse/70 text-xs font-medium uppercase tracking-wider",
                         }}
+                        modifiers={{
+                          weekend: (date) => isWeekend(date),
+                        }}
+                        modifiersClassNames={{
+                          weekend: "text-primary font-semibold",
+                        }}
                       />
                     )}
                   </div>
 
+                  <p className="text-center text-xs text-muted/70 dark:text-muted-inverse/70">
+                    {!hasCalendarUrl
+                      ? "Availability calendar is open. Owner confirms final dates after review."
+                      : "Blocked dates are unavailable. Select an open range."}
+                  </p>
+
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-2xl border border-border-light bg-surface-card p-4 dark:bg-surface-dark/50 dark:border-border-dark">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!range?.from) {
+                          const firstAvailable = [...Array(60)].map((_, i) => {
+                            const d = new Date(today);
+                            d.setDate(d.getDate() + i);
+                            return d;
+                          }).find((d) => !disabledDays(d));
+                          if (firstAvailable) setRange({ from: firstAvailable });
+                        }
+                      }}
+                      className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
+                    >
                       <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-in</p>
                       <p className="font-medium text-text dark:text-text-inverse">
                         {range?.from ? formatDate(range.from) : "Select date"}
                       </p>
-                    </div>
-                    <div className="rounded-2xl border border-border-light bg-surface-card p-4 dark:bg-surface-dark/50 dark:border-border-dark">
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!range?.from) {
+                          const firstAvailable = [...Array(60)].map((_, i) => {
+                            const d = new Date(today);
+                            d.setDate(d.getDate() + i);
+                            return d;
+                          }).find((d) => !disabledDays(d));
+                          if (firstAvailable) setRange({ from: firstAvailable });
+                        } else if (!range?.to && range.from) {
+                          const fromDate = range.from;
+                          const nextAvailable = [...Array(30)].map((_, i) => {
+                            const d = new Date(fromDate);
+                            d.setDate(d.getDate() + 1 + i);
+                            return d;
+                          }).find((d) => !disabledDays(d) && !hasBookedDateInRange(fromDate, d, bookedRanges));
+                          if (nextAvailable) setRange({ from: fromDate, to: nextAvailable });
+                        }
+                      }}
+                      className="rounded-2xl border border-border-light bg-surface-card p-4 text-left transition-colors hover:border-primary/40 dark:bg-surface-dark/50 dark:border-border-dark"
+                    >
                       <p className="text-xs font-semibold uppercase tracking-lux text-primary/70 dark:text-primary mb-1">Check-out</p>
                       <p className="font-medium text-text dark:text-text-inverse">
                         {range?.to ? formatDate(range.to) : "Select date"}
                       </p>
-                    </div>
+                    </button>
                   </div>
 
                   <div className="space-y-3">

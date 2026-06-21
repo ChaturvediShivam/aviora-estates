@@ -107,25 +107,25 @@ export function FeaturedProperty() {
   const comingSoonProperties = properties.filter((p) => p.status === "coming-soon");
 
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-surface dark:bg-surface-dark">
       <Container>
-        <AnimatedSection className="max-w-3xl mb-16 md:mb-24">
-          <SectionLabel className="mb-5">Featured Property</SectionLabel>
+        <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
+          <SectionLabel className="mb-4">Featured Property</SectionLabel>
           <SectionHeading size="lg">
             Our first private estate is ready in Noida.
           </SectionHeading>
         </AnimatedSection>
 
-        <div className="space-y-24 md:space-y-32">
+        <div className="space-y-20 md:space-y-28">
           {liveProperties.map((property, index) => (
             <PropertyCard key={property.slug} property={property} index={index} />
           ))}
         </div>
 
         {comingSoonProperties.length > 0 && (
-          <div className="mt-24 md:mt-32">
-            <AnimatedSection className="max-w-3xl mb-10 md:mb-14">
-              <SectionLabel className="mb-5">On the Horizon</SectionLabel>
+          <div className="mt-16 md:mt-22">
+            <AnimatedSection className="max-w-3xl mb-8 md:mb-12">
+              <SectionLabel className="mb-4">On the Horizon</SectionLabel>
               <SectionHeading size="md">
                 More destinations, same Aviora standard.
               </SectionHeading>

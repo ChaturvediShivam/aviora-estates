@@ -49,6 +49,7 @@ const config: Config = {
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        script: ["var(--font-script)", "Brush Script MT", "cursive"],
       },
       spacing: {
         "18": "4.5rem",

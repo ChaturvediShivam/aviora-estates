@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" fill="currentColor">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&amp;display=swap');
+    text { font-family: 'Great Vibes', 'Brush Script MT', cursive; }
+  </style>
+  <text x="0" y="38" font-size="42" fill="currentColor">Aviora</text>
+</svg>
