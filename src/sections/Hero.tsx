@@ -52,13 +52,13 @@ export function Hero() {
 
         <motion.div
           style={{ y: textY }}
-          className="relative z-10 mx-auto max-w-5xl px-6 text-center text-text-inverse pt-24"
+          className="relative z-10 mx-auto max-w-5xl px-6 text-center text-text-inverse pt-20 md:pt-24"
         >
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-block text-xs font-semibold uppercase tracking-lux text-text-inverse/90 mb-6 drop-shadow"
+            className="inline-block text-xs font-semibold uppercase tracking-lux text-text-inverse/90 mb-5 drop-shadow"
           >
             Private Estate Collection
           </motion.span>
@@ -67,7 +67,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.4 }}
-            className="font-serif text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[1.02] text-balance text-shadow"
+            className="font-serif text-4xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.08] tracking-tight text-balance text-shadow"
           >
             Design-led private stays,
             <br />
@@ -78,7 +78,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.6 }}
-            className="mx-auto mt-7 max-w-2xl text-base md:text-lg lg:text-xl text-text-inverse/95 leading-relaxed drop-shadow"
+            className="mx-auto mt-6 max-w-2xl text-base md:text-lg lg:text-xl text-text-inverse/95 leading-relaxed drop-shadow"
           >
             A curated collection of intimate luxury villas built for stillness,
             celebration, and meaningful escape across India.
@@ -88,7 +88,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.8 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Button
               onClick={() => setIsBookingOpen(true)}
@@ -106,7 +106,7 @@ export function Hero() {
             </Button>
           </motion.div>
 
-          <div className="mt-10 md:mt-14">
+          <div className="mt-9 md:mt-12">
             <TrustBadge />
           </div>
         </motion.div>

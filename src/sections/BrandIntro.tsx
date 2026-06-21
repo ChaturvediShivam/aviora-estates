@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 
 export function BrandIntro() {
   return (
-    <section id="intro" className="section-padding bg-luxury-gradient dark:bg-luxury-gradient-dark">
+    <section id="intro" className="section-padding-connect bg-warm-white dark:bg-warm-white-dark">
       <Container tight>
         <AnimatedSection className="text-center max-w-4xl mx-auto">
           <SectionLabel className="mb-4">Welcome to Aviora</SectionLabel>

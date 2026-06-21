@@ -12,11 +12,12 @@ export function CTA() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-surface dark:bg-surface-dark py-16 md:py-24">
+      <section className="relative overflow-hidden bg-champagne dark:bg-champagne-dark py-14 md:py-20">
         <div
-          className="absolute inset-0 opacity-[0.04] bg-cover bg-center"
+          className="absolute inset-0 opacity-[0.14] bg-cover bg-center"
           style={{ backgroundImage: "url('/images/gallery/villa-front-facade.jpg')" }}
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-champagne/70 via-champagne/85 to-champagne/70 dark:from-champagne-dark/70 dark:via-champagne-dark/85 dark:to-champagne-dark/70" />
         <Container className="relative z-10 text-center">
           <AnimatedSection>
             <p className="text-xs font-semibold uppercase tracking-lux text-primary/80 dark:text-primary mb-4">

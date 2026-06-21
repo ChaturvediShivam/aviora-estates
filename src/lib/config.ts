@@ -451,7 +451,7 @@ export const properties: Property[] = [
       "Walk to quiet beach",
     ],
     heroImages: [
-      { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Grove Goa villa preview" },
+      { src: "/images/coming-soon/goa.svg", alt: "Aviora Grove Goa villa preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Grove Goa pool preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Grove Goa garden preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Grove Goa living preview" },
@@ -518,7 +518,7 @@ export const properties: Property[] = [
       "Private terraces",
     ],
     heroImages: [
-      { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Hills Udaipur villa preview" },
+      { src: "/images/coming-soon/udaipur.svg", alt: "Aviora Hills Udaipur villa preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Hills Udaipur terrace preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Hills Udaipur courtyard preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Hills Udaipur suite preview" },
@@ -585,7 +585,7 @@ export const properties: Property[] = [
       "Wellness-oriented spaces",
     ],
     heroImages: [
-      { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Valley Rishikesh villa preview" },
+      { src: "/images/coming-soon/rishikesh.svg", alt: "Aviora Valley Rishikesh villa preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Valley Rishikesh river deck preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Valley Rishikesh yoga pavilion preview" },
       { src: "/images/placeholder/coming-soon.svg", alt: "Aviora Valley Rishikesh suite preview" },

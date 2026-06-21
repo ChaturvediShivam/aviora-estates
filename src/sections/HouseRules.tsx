@@ -11,7 +11,7 @@ const icons = [CigaretteOff, Music, Users, UserPlus, HeartHandshake];
 
 export function HouseRules() {
   return (
-    <section className="section-padding bg-surface-card dark:bg-surface-dark/30">
+    <section className="section-padding bg-warm-white dark:bg-warm-white-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-4">House Rules</SectionLabel>
@@ -29,8 +29,8 @@ export function HouseRules() {
             const Icon = icons[index] || HeartHandshake;
             return (
               <AnimatedSection key={rule.title} delay={index * 0.1}>
-                <div className="group h-full p-6 rounded-2xl border border-border-light bg-surface hover:border-border-accent hover:shadow-sm transition-all duration-500 dark:bg-surface-dark/60 dark:border-border-dark">
-                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500">
+                <div className="group h-full card-luxury p-6">
+                  <div className="mb-6 h-14 w-14 icon-circle-luxury">
                     <Icon size={24} />
                   </div>
                   <h3 className="font-serif text-xl text-text-heading mb-3 dark:text-text-inverse">

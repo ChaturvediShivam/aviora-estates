@@ -81,23 +81,27 @@ function ComingSoonCard({ property }: { property: Property }) {
   const image = property.heroImages[0];
 
   return (
-    <div className="group">
-      <ImageCard
-        src={image?.src || "/images/placeholder/coming-soon.svg"}
-        alt={image?.alt || property.name}
-        aspect="landscape"
-        className="rounded-2xl mb-5"
-      />
-      <span className="inline-block rounded-full bg-surface-elevated px-3 py-1 text-xs font-semibold uppercase tracking-lux text-muted dark:bg-surface-dark/50 dark:text-muted-inverse">
-        {property.badge || "Coming Soon"}
-      </span>
-      <h3 className="mt-3 font-serif text-xl text-text-heading dark:text-text-inverse">
-        {property.name}
-      </h3>
-      <p className="mt-1 text-sm text-muted dark:text-muted-inverse">{property.location}</p>
-      <p className="mt-3 text-sm leading-relaxed text-muted/80 dark:text-muted-inverse/80">
-        {property.tagline}
-      </p>
+    <div className="group card-luxury overflow-hidden">
+      <div className="relative overflow-hidden">
+        <ImageCard
+          src={image?.src || "/images/placeholder/coming-soon.svg"}
+          alt={image?.alt || property.name}
+          aspect="landscape"
+          className="rounded-none"
+        />
+        <span className="absolute top-4 left-4 z-10 inline-block rounded-full bg-secondary/70 backdrop-blur-sm px-3 py-1 text-xs font-semibold uppercase tracking-lux text-text-inverse">
+          {property.badge || "Coming Soon"}
+        </span>
+      </div>
+      <div className="p-6">
+        <p className="text-xs font-semibold uppercase tracking-lux text-muted dark:text-muted-inverse mb-2">{property.location}</p>
+        <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-2">
+          {property.name}
+        </h3>
+        <p className="text-sm leading-relaxed text-muted dark:text-muted-inverse">
+          {property.tagline}
+        </p>
+      </div>
     </div>
   );
 }
@@ -107,7 +111,7 @@ export function FeaturedProperty() {
   const comingSoonProperties = properties.filter((p) => p.status === "coming-soon");
 
   return (
-    <section className="section-padding bg-surface dark:bg-surface-dark">
+    <section className="section-padding bg-ivory dark:bg-ivory-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-4">Featured Property</SectionLabel>
@@ -116,14 +120,14 @@ export function FeaturedProperty() {
           </SectionHeading>
         </AnimatedSection>
 
-        <div className="space-y-20 md:space-y-28">
+        <div className="space-y-16 md:space-y-22">
           {liveProperties.map((property, index) => (
             <PropertyCard key={property.slug} property={property} index={index} />
           ))}
         </div>
 
         {comingSoonProperties.length > 0 && (
-          <div className="mt-16 md:mt-22">
+          <div className="mt-14 md:mt-18">
             <AnimatedSection className="max-w-3xl mb-8 md:mb-12">
               <SectionLabel className="mb-4">On the Horizon</SectionLabel>
               <SectionHeading size="md">
@@ -131,7 +135,7 @@ export function FeaturedProperty() {
               </SectionHeading>
             </AnimatedSection>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {comingSoonProperties.map((property, index) => (
                 <AnimatedSection key={property.slug} delay={index * 0.1}>
                   <ComingSoonCard property={property} />

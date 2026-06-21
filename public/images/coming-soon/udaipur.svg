@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="udaipurSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF3E7"/>
+      <stop offset="45%" stop-color="#E8C9A8"/>
+      <stop offset="100%" stop-color="#D9B08E"/>
+    </linearGradient>
+    <linearGradient id="udaipurWater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C69C7C"/>
+      <stop offset="100%" stop-color="#A67C5B"/>
+    </linearGradient>
+    <filter id="udaipurGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#udaipurSky)"/>
+  <circle cx="140" cy="120" r="50" fill="#FFF5E6" opacity="0.7" filter="url(#udaipurGlow)"/>
+  <path d="M0 360 Q220 330 400 355 T800 345 V600 H0 Z" fill="url(#udaipurWater)" opacity="0.85"/>
+  <path d="M0 390 Q240 375 420 392 T800 382 V600 H0 Z" fill="#D4B89A" opacity="0.4"/>
+  <g transform="translate(260,140)" opacity="0.92">
+    <path d="M0 240 V100 H40 V80 H80 V60 H120 V80 H160 V100 H200 V240 Z" fill="#C49A74"/>
+    <path d="M20 100 H60 V180 H20 Z" fill="#8C6B50"/>
+    <path d="M80 80 H120 V180 H80 Z" fill="#8C6B50"/>
+    <path d="M140 100 H180 V180 H140 Z" fill="#8C6B50"/>
+    <path d="M0 60 Q100 -20 200 60" fill="none" stroke="#B08866" stroke-width="6"/>
+    <circle cx="100" cy="35" r="14" fill="#B08866"/>
+    <path d="M86 35 L100 15 L114 35 Z" fill="#B08866"/>
+  </g>
+  <g transform="translate(120,200)" opacity="0.75">
+    <path d="M0 200 V120 H30 V105 H60 V120 H90 V200 Z" fill="#B88E6B"/>
+    <path d="M15 120 H45 V170 H15 Z" fill="#7A5C45"/>
+  </g>
+  <g transform="translate(540,170)" opacity="0.8">
+    <path d="M0 170 V90 H25 V75 H50 V90 H75 V170 Z" fill="#C49A74"/>
+    <path d="M12 90 H37 V145 H12 Z" fill="#8C6B50"/>
+  </g>
+  <path d="M0 520 Q320 470 800 515 V600 H0 Z" fill="#B89072" opacity="0.25"/>
+</svg>

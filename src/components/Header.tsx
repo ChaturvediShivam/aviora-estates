@@ -31,8 +31,8 @@ export function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out",
         scrolled
-          ? "bg-surface/90 backdrop-blur-xl border-b border-border-light/60 shadow-[0_4px_30px_rgba(21,21,21,0.06)] dark:bg-surface-dark/85 dark:border-border-dark/60"
-          : "bg-gradient-to-b from-secondary/40 via-secondary/10 to-transparent backdrop-blur-[2px]"
+          ? "bg-surface/95 backdrop-blur-xl border-b border-border-light/60 shadow-[0_4px_30px_rgba(21,21,21,0.06)] dark:bg-surface-dark/90 dark:border-border-dark/60"
+          : "bg-transparent"
       )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">

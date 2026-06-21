@@ -35,7 +35,7 @@ const trustItems = [
 
 export function TrustSection() {
   return (
-    <section className="section-padding bg-warm-beige dark:bg-warm-beige-dark">
+    <section className="section-padding bg-stone-soft dark:bg-stone-soft-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-4">Why Trust Us</SectionLabel>
@@ -50,8 +50,8 @@ export function TrustSection() {
         <div className="grid md:grid-cols-2 gap-5">
           {trustItems.map((item, index) => (
             <AnimatedSection key={item.title} delay={index * 0.1}>
-              <div className="group flex gap-5 p-6 rounded-2xl border border-border-light bg-surface-card hover:border-border-accent hover:shadow-sm transition-all duration-500 dark:bg-surface-dark/60 dark:border-border-dark">
-                <div className="shrink-0 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500">
+              <div className="group flex gap-5 card-luxury p-6">
+                <div className="shrink-0 h-12 w-12 icon-circle-luxury">
                   <item.icon size={22} />
                 </div>
                 <div>

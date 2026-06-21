@@ -8,7 +8,7 @@ import { booking } from "@/lib/config";
 
 export function BookingProcess() {
   return (
-    <section className="section-padding bg-surface-card dark:bg-surface-dark/30">
+    <section className="section-padding bg-warm-white dark:bg-warm-white-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-4">How to Book</SectionLabel>
@@ -28,7 +28,7 @@ export function BookingProcess() {
                   <div className="relative shrink-0 flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full bg-primary text-text-inverse font-serif text-lg md:text-xl z-10 shadow-sm">
                     {step.step}
                   </div>
-                  <div className="rounded-2xl border border-border-light bg-surface p-5 md:p-7 flex-1 dark:bg-surface-dark/60 dark:border-border-dark">
+                  <div className="card-luxury p-5 md:p-7 flex-1">
                     <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-1">
                       {step.title}
                     </h3>

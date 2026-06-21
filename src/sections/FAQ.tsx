@@ -76,9 +76,9 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="section-padding bg-luxury-gradient dark:bg-luxury-gradient-dark">
+    <section className="section-padding-connect bg-champagne dark:bg-champagne-dark">
       <Container className="max-w-3xl">
-        <AnimatedSection className="text-center mb-14">
+        <AnimatedSection className="text-center mb-10 md:mb-12">
           <SectionLabel className="mb-5">Questions</SectionLabel>
           <SectionHeading size="lg" className="text-balance">
             Everything you need to know.
@@ -86,7 +86,7 @@ export function FAQ() {
         </AnimatedSection>
 
         <AnimatedSection>
-          <div className="rounded-3xl border border-border-light bg-surface-card p-6 md:p-10 dark:bg-surface-dark/60 dark:border-border-dark">
+          <div className="card-luxury p-6 md:p-10">
             {faqs.map((faq, index) => (
               <FAQItem
                 key={faq.question}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="rishiSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8F0E4"/>
+      <stop offset="40%" stop-color="#C8D9C3"/>
+      <stop offset="100%" stop-color="#A8C1A0"/>
+    </linearGradient>
+    <linearGradient id="rishiHill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6B8E6E"/>
+      <stop offset="100%" stop-color="#3E5A41"/>
+    </linearGradient>
+    <linearGradient id="rishiWater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#AECCB8"/>
+      <stop offset="100%" stop-color="#7DA08C"/>
+    </linearGradient>
+    <filter id="rishiMist" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#rishiSky)"/>
+  <path d="M0 280 Q150 180 300 260 T600 240 T800 280 V600 H0 Z" fill="url(#rishiHill)" opacity="0.35"/>
+  <path d="M0 340 Q180 260 360 320 T720 300 T800 340 V600 H0 Z" fill="url(#rishiHill)" opacity="0.55"/>
+  <path d="M0 420 Q200 360 400 410 T800 400 V600 H0 Z" fill="url(#rishiWater)" opacity="0.75"/>
+  <path d="M0 460 Q220 430 420 455 T800 445 V600 H0 Z" fill="#C9D9C7" opacity="0.4"/>
+  <g opacity="0.85">
+    <path d="M60 430 Q75 310 65 240 Q85 310 95 430" fill="#2F4532"/>
+    <path d="M45 320 Q15 270 -10 285 Q25 295 42 325" fill="#3B523D"/>
+    <path d="M80 315 Q120 260 155 280 Q115 295 85 320" fill="#3B523D"/>
+    <ellipse cx="70" cy="435" rx="22" ry="5" fill="#2F4532" opacity="0.5"/>
+  </g>
+  <g opacity="0.75" transform="translate(620,20)">
+    <path d="M50 420 Q65 300 55 230 Q75 300 85 420" fill="#2F4532"/>
+    <path d="M35 310 Q5 260 -20 275 Q15 285 32 315" fill="#3B523D"/>
+    <path d="M70 305 Q110 250 145 270 Q105 285 75 310" fill="#3B523D"/>
+    <ellipse cx="60" cy="425" rx="22" ry="5" fill="#2F4532" opacity="0.5"/>
+  </g>
+  <g opacity="0.5" filter="url(#rishiMist)">
+    <ellipse cx="250" cy="360" rx="120" ry="18" fill="#FFFFFF"/>
+    <ellipse cx="580" cy="370" rx="140" ry="22" fill="#FFFFFF"/>
+  </g>
+  <path d="M0 540 Q300 510 800 545 V600 H0 Z" fill="#9BB89D" opacity="0.25"/>
+</svg>

@@ -41,7 +41,7 @@ const features = [
 
 export function Features() {
   return (
-    <section className="section-padding bg-surface-card dark:bg-surface-dark/30">
+    <section className="section-padding bg-champagne dark:bg-champagne-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-14 md:mb-20">
           <SectionLabel className="mb-5">The Estate</SectionLabel>
@@ -53,8 +53,8 @@ export function Features() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <AnimatedSection key={feature.title} delay={index * 0.08}>
-              <div className="group h-full p-7 rounded-2xl border border-border-light bg-surface hover:border-border-accent hover:shadow-sm transition-all duration-500 dark:bg-surface-dark/60 dark:border-border-dark">
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500">
+              <div className="group h-full card-luxury p-7">
+                <div className="mb-5 h-12 w-12 icon-circle-luxury">
                   <feature.icon size={22} />
                 </div>
                 <h3 className="font-serif text-xl text-text-heading dark:text-text-inverse mb-2">

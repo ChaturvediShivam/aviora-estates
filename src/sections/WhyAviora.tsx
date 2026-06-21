@@ -35,7 +35,7 @@ const reasons = [
 
 export function WhyAviora() {
   return (
-    <section className="section-padding bg-surface dark:bg-surface-dark">
+    <section className="section-padding bg-champagne dark:bg-champagne-dark">
       <Container>
         <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-4">Why Aviora</SectionLabel>
@@ -47,8 +47,8 @@ export function WhyAviora() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {reasons.map((reason, index) => (
             <AnimatedSection key={reason.title} delay={index * 0.1}>
-              <div className="group h-full p-6 rounded-2xl border border-border-light bg-surface-card hover:border-border-accent hover:shadow-sm transition-all duration-500 dark:bg-surface-dark/60 dark:border-border-dark dark:hover:bg-surface-dark/80">
-                <div className="mb-5 inline-flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-500">
+              <div className="group h-full card-luxury p-6">
+                <div className="mb-5 h-12 w-12 icon-circle-luxury">
                   <reason.icon size={22} />
                 </div>
                 <h3 className="font-serif text-xl text-text-heading mb-2 dark:text-text-inverse">{reason.title}</h3>

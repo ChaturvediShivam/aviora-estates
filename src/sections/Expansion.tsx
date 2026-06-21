@@ -8,9 +8,9 @@ import { expansion, business } from "@/lib/config";
 
 export function Expansion() {
   return (
-    <section className="section-padding bg-warm-beige dark:bg-warm-beige-dark">
+    <section className="section-padding bg-ivory dark:bg-ivory-dark">
       <Container>
-        <AnimatedSection className="max-w-3xl mb-16 md:mb-24">
+        <AnimatedSection className="max-w-3xl mb-12 md:mb-16">
           <SectionLabel className="mb-5">Coming Soon</SectionLabel>
           <SectionHeading size="lg" className="dark:text-text-inverse">
             {expansion.title}
@@ -20,7 +20,7 @@ export function Expansion() {
 
         <div className="grid md:grid-cols-3 gap-8">
           <AnimatedSection>
-            <div className="rounded-2xl border border-border-light bg-surface-card p-8 h-full dark:bg-surface-dark/60 dark:border-border-dark">
+            <div className="card-luxury p-8 h-full">
               <h3 className="font-serif text-2xl text-text-heading mb-5 dark:text-text-inverse">Themes</h3>
               <ul className="space-y-3 text-muted dark:text-muted-inverse">
                 {expansion.themes.map((theme) => (
@@ -34,7 +34,7 @@ export function Expansion() {
           </AnimatedSection>
 
           <AnimatedSection delay={0.1}>
-            <div className="rounded-2xl border border-border-light bg-surface-card p-8 h-full dark:bg-surface-dark/60 dark:border-border-dark">
+            <div className="card-luxury p-8 h-full">
               <h3 className="font-serif text-2xl text-text-heading mb-5 dark:text-text-inverse">Locations</h3>
               <ul className="space-y-3 text-muted dark:text-muted-inverse">
                 {expansion.locations.map((location) => (
@@ -48,7 +48,7 @@ export function Expansion() {
           </AnimatedSection>
 
           <AnimatedSection delay={0.2}>
-            <div className="rounded-2xl border border-border-light bg-surface-card p-8 h-full dark:bg-surface-dark/60 dark:border-border-dark">
+            <div className="card-luxury p-8 h-full">
               <h3 className="font-serif text-2xl text-text-heading mb-5 dark:text-text-inverse">Unit Types</h3>
               <ul className="space-y-3 text-muted dark:text-muted-inverse">
                 {expansion.unitTypes.map((type) => (
