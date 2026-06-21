@@ -20,9 +20,7 @@ interface BookingFlowModalProps {
 
 const MAX_ADULTS = 16;
 const ABSOLUTE_MAX_ADULTS = 20;
-const STORAGE_KEY = "aviora-booking-draft";
 const BOOKING_ID_KEY = "aviora-booking-counter";
-const DRAFT_TTL_MS = 24 * 60 * 60 * 1000;
 const PET_PRICE = 500;
 
 const OCCASIONS = [
@@ -49,21 +47,6 @@ function generateBookingId(): string {
   const id = `AVR-${String(next).padStart(3, "0")}`;
   localStorage.setItem(BOOKING_ID_KEY, String(next + 1));
   return id;
-}
-
-function serializeRange(range?: DateRange) {
-  if (!range) return undefined;
-  return {
-    from: range.from?.toISOString(),
-    to: range.to?.toISOString(),
-  };
-}
-
-function parseRange(saved?: { from?: string; to?: string }): DateRange | undefined {
-  if (!saved) return undefined;
-  const from = saved.from ? new Date(saved.from) : undefined;
-  const to = saved.to ? new Date(saved.to) : undefined;
-  return from || to ? { from, to } : undefined;
 }
 
 function getShortLocation(location: string): string {
@@ -138,81 +121,28 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
   }, []);
 
   const clearDraft = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
     resetState();
   }, [resetState]);
 
   const handleClose = useCallback(() => {
+    resetState();
     onClose();
-  }, [onClose]);
+  }, [onClose, resetState]);
 
-  // Load draft when modal opens
+  // Initialize booking ID and clean state when modal opens.
+  // Guest data is intentionally NOT persisted for privacy.
   useEffect(() => {
     if (!isOpen) {
       document.body.style.overflow = "";
       return;
     }
     document.body.style.overflow = "hidden";
-
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      try {
-        const draft = JSON.parse(raw);
-        const age = Date.now() - (draft.savedAt || 0);
-        if (age < DRAFT_TTL_MS) {
-          setStep(draft.step || 1);
-          if (!defaultPropertySlug && draft.propertySlug) {
-            const match = properties.find((p) => p.slug === draft.propertySlug);
-            if (match) setSelectedProperty(match);
-          }
-          setGuestName(draft.guestName || "");
-          setGuestPhone(draft.guestPhone || "");
-          setGuestEmail(draft.guestEmail || "");
-          setAdults(draft.adults ?? 2);
-          setChildren(draft.children ?? 0);
-          setPets(draft.pets ?? 0);
-          setRange(parseRange(draft.range));
-          setOccasion(draft.occasion || "");
-          setArrivalTime(draft.arrivalTime || "");
-          setBookingId(draft.bookingId || generateBookingId());
-          setTermsAccepted(draft.termsAccepted ?? false);
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-          setBookingId(generateBookingId());
-        }
-      } catch {
-        setBookingId(generateBookingId());
-      }
-    } else {
-      setBookingId(generateBookingId());
-    }
+    resetState();
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen, defaultPropertySlug]);
-
-  // Persist state as a draft
-  useEffect(() => {
-    if (!isOpen) return;
-    const draft = {
-      step,
-      propertySlug: selectedProperty.slug,
-      guestName,
-      guestPhone,
-      guestEmail,
-      adults,
-      children,
-      pets,
-      range: serializeRange(range),
-      occasion,
-      arrivalTime,
-      bookingId,
-      termsAccepted,
-      savedAt: Date.now(),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [isOpen, step, selectedProperty, guestName, guestPhone, guestEmail, adults, children, pets, range, occasion, arrivalTime, bookingId, termsAccepted]);
+  }, [isOpen, resetState]);
 
   useEffect(() => {
     if (!isOpen) return;
