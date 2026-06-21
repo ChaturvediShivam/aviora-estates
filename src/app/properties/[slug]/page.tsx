@@ -136,7 +136,7 @@ export default async function PropertyDetailPage({
                 </div>
                 <div>
                   <p className="text-sm font-medium text-text-heading dark:text-text-inverse">Owner-managed response</p>
-                  <p className="text-xs text-muted dark:text-muted-inverse">Most guests receive a response the same day</p>
+                  <p className="text-xs text-muted dark:text-muted-inverse">Most guests receive a response within 2 hrs.</p>
                 </div>
               </div>
 
@@ -170,11 +170,11 @@ export default async function PropertyDetailPage({
                 Submit a stay request for {property.name}. The owner will review availability and share final pricing and next steps.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <PropertyDetailClient property={property} buttonLabel="Request Availability" />
+                <PropertyDetailClient property={property} buttonLabel="Request Availability" variant="primary" />
                 <PropertyDetailClient
                   property={property}
                   buttonLabel="Send an Inquiry"
-                  ghost
+                  variant="outline"
                 />
               </div>
             </AnimatedSection>
@@ -246,7 +246,7 @@ export default async function PropertyDetailPage({
           <AnimatedSection className="mt-10 text-center" delay={0.3}>
             <p className="text-sm text-muted/70 dark:text-muted-inverse/70">
               Base capacity {capacity.nightStay} guests for night stays. Day use up to {capacity.dayUse} guests.
-              Extra guests charged at {pricing.extraGuest.amount} {pricing.extraGuest.per}. Rates shown are estimates; final pricing confirmed after owner review.
+              Extra adults charged at {pricing.extraGuest.amount} {pricing.extraGuest.per}. Rates shown are estimates; final pricing confirmed after owner review.
             </p>
           </AnimatedSection>
         </Container>
@@ -304,25 +304,26 @@ export default async function PropertyDetailPage({
         </section>
       )}
 
-      <section className="section-padding-sm bg-primary text-text-inverse">
+      <section className="section-padding-sm bg-luxury-gradient dark:bg-luxury-gradient-dark text-text-heading dark:text-text-inverse">
         <Container className="text-center">
           <AnimatedSection>
-            <h2 className="font-serif text-3xl md:text-5xl">{isLive ? "Ready to request your stay?" : "Join the waitlist"}</h2>
-            <p className="mt-4 max-w-xl mx-auto text-text-inverse/80">
+            <h2 className="font-serif text-3xl md:text-5xl text-text-heading dark:text-text-inverse">{isLive ? "Ready to request your stay?" : "Join the waitlist"}</h2>
+            <p className="mt-4 max-w-xl mx-auto text-muted dark:text-muted-inverse">
               {isLive
                 ? "Submit a stay request and the owner will personally review availability, share final pricing, and guide you through a secure, owner-approved reservation."
                 : "Be the first to know when this property opens for bookings."}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               {isLive ? (
-                <PropertyDetailClient property={property} buttonLabel="Request Availability" />
+                <PropertyDetailClient property={property} buttonLabel="Request Availability" variant="primary" />
               ) : (
-                <PropertyDetailClient property={property} buttonLabel="Join Waitlist" />
+                <PropertyDetailClient property={property} buttonLabel="Join Waitlist" variant="primary" />
               )}
               <PropertyDetailClient
                 property={property}
                 buttonLabel="Contact Page"
                 href="/contact"
+                variant="outline"
               />
             </div>
           </AnimatedSection>
@@ -343,6 +344,7 @@ export default async function PropertyDetailPage({
             <PropertyDetailClient
               property={property}
               buttonLabel={isLive ? "Request Availability" : "Join Waitlist"}
+              variant="primary"
               className="px-5 py-2.5 text-xs"
             />
             <a

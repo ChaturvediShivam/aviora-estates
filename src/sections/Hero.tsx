@@ -93,7 +93,7 @@ export function Hero() {
             <Button
               onClick={() => setIsBookingOpen(true)}
               variant="primary"
-              className="bg-surface-card text-text-heading hover:bg-surface-elevated hover:shadow-xl px-8"
+              className="px-8"
             >
               Request Availability
             </Button>

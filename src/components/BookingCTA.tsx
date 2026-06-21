@@ -46,12 +46,11 @@ export function BookingCTA({
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 onClick={() => setIsOpen(true)}
-                variant={isDark ? "outline" : "primary"}
-                className={isDark ? "border-text-inverse text-text-inverse hover:bg-text-inverse hover:text-text-heading" : ""}
+                variant="primary"
               >
                 Request Availability
               </Button>
-              <Button href="/contact" variant={isDark ? "ghost" : "outline"} className={isDark ? "text-text-inverse hover:bg-text-inverse/10" : ""}>
+              <Button href="/contact" variant="outline">
                 Send an Inquiry
               </Button>
             </div>

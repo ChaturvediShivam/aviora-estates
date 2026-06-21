@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 interface PropertyDetailClientProps {
   property: Property;
   buttonLabel?: string;
-  ghost?: boolean;
+  variant?: "primary" | "outline" | "ghost";
   href?: string;
   className?: string;
 }
@@ -18,7 +18,7 @@ interface PropertyDetailClientProps {
 export function PropertyDetailClient({
   property,
   buttonLabel = "Request Availability",
-  ghost = false,
+  variant = "outline",
   href,
   className,
 }: PropertyDetailClientProps) {
@@ -27,7 +27,7 @@ export function PropertyDetailClient({
 
   if (href) {
     return (
-      <Button href={href} variant={ghost ? "ghost" : "outline"} className={className}>
+      <Button href={href} variant={variant} className={className}>
         {buttonLabel}
       </Button>
     );
@@ -38,7 +38,7 @@ export function PropertyDetailClient({
       <>
         <Button
           onClick={() => setIsOpen(true)}
-          variant={ghost ? "ghost" : "outline"}
+          variant={variant}
           className={className}
         >
           {buttonLabel}
@@ -56,7 +56,7 @@ export function PropertyDetailClient({
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        variant={ghost ? "ghost" : "outline"}
+        variant={variant}
         className={className}
       >
         {buttonLabel}

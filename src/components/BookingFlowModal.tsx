@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Minus, Plus, CalendarDays, ShieldCheck, FileText, AlertTriangle, Clock, Users, IdCard, Banknote, CheckCircle2, Send, RotateCcw } from "lucide-react";
 import { DayPicker, type DateRange } from "react-day-picker";
-import { format, isBefore, startOfToday, eachDayOfInterval, isWeekend } from "date-fns";
+import { format, isBefore, startOfToday, eachDayOfInterval, getDay, isWeekend } from "date-fns";
 import { properties, business, pricing, capacity, booking, type Property } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { fetchBookedRanges, isDateBooked, hasBookedDateInRange } from "@/lib/ical";
@@ -20,6 +20,7 @@ interface BookingFlowModalProps {
 
 const MAX_GUESTS = 16;
 const STORAGE_KEY = "aviora-booking-draft";
+const BOOKING_ID_KEY = "aviora-booking-counter";
 const DRAFT_TTL_MS = 24 * 60 * 60 * 1000;
 
 const OCCASIONS = [
@@ -35,9 +36,17 @@ function parseAmount(amount: string): number {
   return numeric ? parseInt(numeric, 10) : 0;
 }
 
-function generateReferenceId(): string {
-  const digits = Math.floor(10000 + Math.random() * 90000);
-  return `AVR-${digits}`;
+function generateBookingId(): string {
+  if (typeof window === "undefined") return "AVR-001";
+  const raw = localStorage.getItem(BOOKING_ID_KEY);
+  let next = 1;
+  if (raw) {
+    const parsed = parseInt(raw, 10);
+    if (!isNaN(parsed) && parsed > 0) next = parsed;
+  }
+  const id = `AVR-${String(next).padStart(3, "0")}`;
+  localStorage.setItem(BOOKING_ID_KEY, String(next + 1));
+  return id;
 }
 
 function serializeRange(range?: DateRange) {
@@ -78,7 +87,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
   const [bookedRanges, setBookedRanges] = useState<{ start: Date; end: Date }[]>([]);
   const [isLoadingCalendar, setIsLoadingCalendar] = useState(false);
   const hasCalendarUrl = Boolean(selectedProperty.icalUrl && selectedProperty.icalUrl.trim());
-  const [referenceId, setReferenceId] = useState<string>(generateReferenceId());
+  const [bookingId, setBookingId] = useState<string>("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [occasion, setOccasion] = useState("");
   const [arrivalTime, setArrivalTime] = useState<string>("");
@@ -123,7 +132,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
     setTermsAccepted(false);
     setStep1Touched(false);
     setWebsite("");
-    setReferenceId(generateReferenceId());
+    setBookingId(generateBookingId());
   }, []);
 
   const clearDraft = useCallback(() => {
@@ -163,17 +172,17 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
           setRange(parseRange(draft.range));
           setOccasion(draft.occasion || "");
           setArrivalTime(draft.arrivalTime || "");
-          setReferenceId(draft.referenceId || generateReferenceId());
+          setBookingId(draft.bookingId || generateBookingId());
           setTermsAccepted(draft.termsAccepted ?? false);
         } else {
           localStorage.removeItem(STORAGE_KEY);
-          setReferenceId(generateReferenceId());
+          setBookingId(generateBookingId());
         }
       } catch {
-        setReferenceId(generateReferenceId());
+        setBookingId(generateBookingId());
       }
     } else {
-      setReferenceId(generateReferenceId());
+      setBookingId(generateBookingId());
     }
 
     return () => {
@@ -196,12 +205,12 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       range: serializeRange(range),
       occasion,
       arrivalTime,
-      referenceId,
+      bookingId,
       termsAccepted,
       savedAt: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [isOpen, step, selectedProperty, guestName, guestPhone, guestEmail, adults, children, pets, range, occasion, arrivalTime, referenceId, termsAccepted]);
+  }, [isOpen, step, selectedProperty, guestName, guestPhone, guestEmail, adults, children, pets, range, occasion, arrivalTime, bookingId, termsAccepted]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -266,13 +275,22 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
   const formatDate = (date?: Date) => (date ? format(date, "d MMMM yyyy") : "");
 
   const totalGuests = adults + children;
-  const exceedsBaseOccupancy = totalGuests > capacity.baseGuests;
+  const extraAdults = Math.max(0, adults - capacity.baseGuests);
+  const exceedsBaseOccupancy = extraAdults > 0;
+
+  const isWeekendNight = (date: Date) => {
+    const day = getDay(date);
+    // Property weekend rates apply to Friday (5) and Saturday (6) nights.
+    return day === 5 || day === 6;
+  };
 
   const pricingEstimate = useMemo(() => {
     if (!range?.from || !range?.to) return null;
 
     const days = eachDayOfInterval({ start: range.from, end: range.to });
     const totalNights = Math.max(1, days.length - 1);
+    const weekdayOriginalPrice = parseAmount(pricing.weekday.originalAmount);
+    const weekendOriginalPrice = parseAmount(pricing.weekend.originalAmount);
     const weekdayPrice = parseAmount(pricing.weekday.amount);
     const weekendPrice = parseAmount(pricing.weekend.amount);
     const extraGuestPrice = parseAmount(pricing.extraGuest.amount);
@@ -281,36 +299,41 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
     let weekendNights = 0;
     for (let i = 0; i < totalNights; i++) {
       const nightDate = days[i];
-      if (isWeekend(nightDate)) {
+      if (isWeekendNight(nightDate)) {
         weekendNights++;
       } else {
         weekdayNights++;
       }
     }
 
+    const originalWeekdayTotal = weekdayNights * weekdayOriginalPrice;
+    const originalWeekendTotal = weekendNights * weekendOriginalPrice;
+    const originalStayEstimate = originalWeekdayTotal + originalWeekendTotal;
+
     const weekdayTotal = weekdayNights * weekdayPrice;
     const weekendTotal = weekendNights * weekendPrice;
-    const baseGuests = capacity.baseGuests;
-    const totalGuests = adults + children;
-    const extraGuests = Math.max(0, totalGuests - baseGuests);
-    const extraGuestTotal = extraGuests * extraGuestPrice * totalNights;
-    const securityDeposit = parseAmount(pricing.securityDeposit.amount);
     const stayEstimate = weekdayTotal + weekendTotal;
-    const totalPayableAfterApproval = stayEstimate + extraGuestTotal;
+
+    const extraGuestTotal = extraAdults * extraGuestPrice * totalNights;
+    const securityDeposit = parseAmount(pricing.securityDeposit.amount);
+    const totalPayableAfterApproval = stayEstimate + extraGuestTotal + securityDeposit;
 
     return {
       totalNights,
       weekdayNights,
       weekendNights,
+      originalWeekdayTotal,
+      originalWeekendTotal,
+      originalStayEstimate,
       weekdayTotal,
       weekendTotal,
-      extraGuests,
+      stayEstimate,
+      extraAdults,
       extraGuestTotal,
       securityDeposit,
-      stayEstimate,
       totalPayableAfterApproval,
     };
-  }, [adults, children, range]);
+  }, [adults, range, extraAdults]);
 
   const generateWhatsAppUrl = useCallback(() => {
     const host = selectedProperty.hostName || "Alok";
@@ -336,9 +359,9 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       arrivalTime ? `Expected arrival: ${arrivalTime}` : "",
       "",
       pricingEstimate
-        ? `Estimated stay total: ₹${pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")} for ${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""}. Final pricing to be confirmed by owner after review. Security deposit of ₹${pricingEstimate.securityDeposit.toLocaleString("en-IN")} is fully refundable after checkout, subject to inspection.`
+        ? `Estimated total: ₹${pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")} for ${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""} (includes discounted stay, extra adults, and refundable security deposit of ₹${pricingEstimate.securityDeposit.toLocaleString("en-IN")}). Final pricing to be confirmed by owner after review.`
         : "",
-      `Reference: ${referenceId}`,
+      `Booking ID: ${bookingId}`,
       "",
       "Please confirm availability.",
     ]
@@ -346,7 +369,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
       .join("\n");
 
     return `/api/whatsapp?message=${encodeURIComponent(message)}`;
-  }, [adults, children, pets, range, arrivalTime, referenceId, selectedProperty, pricingEstimate, occasion, guestName, guestPhone, guestEmail]);
+  }, [adults, children, pets, range, arrivalTime, bookingId, selectedProperty, pricingEstimate, occasion, guestName, guestPhone, guestEmail]);
 
   const handleNext = useCallback(() => {
     if (step === 1) {
@@ -649,7 +672,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     <div className="flex items-start gap-3 rounded-2xl border border-warning bg-warning/30 p-4 dark:bg-warning/20">
                       <AlertTriangle size={20} className="mt-0.5 shrink-0 text-warning-text" />
                       <p className="text-sm text-text dark:text-text-inverse">
-                        Your group exceeds our base occupancy of {capacity.baseGuests} guests. Extra guest charges will apply beyond the included capacity.
+                        Your booking exceeds our base capacity of {capacity.baseGuests} adults. Extra adult charges will apply beyond the included capacity.
                       </p>
                     </div>
                   )}
@@ -866,8 +889,8 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted dark:text-muted-inverse">Reference ID</span>
-                        <span className="font-medium text-text dark:text-text-inverse font-mono text-right">{referenceId}</span>
+                        <span className="text-muted dark:text-muted-inverse">Booking ID</span>
+                        <span className="font-medium text-text dark:text-text-inverse font-mono text-right">{bookingId}</span>
                       </div>
                     </div>
                   </div>
@@ -878,19 +901,53 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                       <span className="text-xs font-semibold uppercase tracking-lux text-primary">21% OFF weekday • 22% OFF weekend</span>
                     </div>
 
+                    {pricingEstimate.weekdayNights > 0 && (
+                      <>
+                        <LineItem
+                          label={`${pricingEstimate.weekdayNights} weekday night${pricingEstimate.weekdayNights > 1 ? "s" : ""} @ ${pricing.weekday.originalAmount}`}
+                          value={`₹${pricingEstimate.originalWeekdayTotal.toLocaleString("en-IN")}`}
+                          muted
+                        />
+                        <LineItem
+                          label={`${pricingEstimate.weekdayNights} weekday night${pricingEstimate.weekdayNights > 1 ? "s" : ""} @ ${pricing.weekday.amount}`}
+                          value={`₹${pricingEstimate.weekdayTotal.toLocaleString("en-IN")}`}
+                        />
+                      </>
+                    )}
+
+                    {pricingEstimate.weekendNights > 0 && (
+                      <>
+                        <LineItem
+                          label={`${pricingEstimate.weekendNights} weekend night${pricingEstimate.weekendNights > 1 ? "s" : ""} @ ${pricing.weekend.originalAmount}`}
+                          value={`₹${pricingEstimate.originalWeekendTotal.toLocaleString("en-IN")}`}
+                          muted
+                        />
+                        <LineItem
+                          label={`${pricingEstimate.weekendNights} weekend night${pricingEstimate.weekendNights > 1 ? "s" : ""} @ ${pricing.weekend.amount}`}
+                          value={`₹${pricingEstimate.weekendTotal.toLocaleString("en-IN")}`}
+                        />
+                      </>
+                    )}
+
+                    {pricingEstimate.originalStayEstimate > pricingEstimate.stayEstimate && (
+                      <LineItem
+                        label={`Original stay total (${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""})`}
+                        value={`₹${pricingEstimate.originalStayEstimate.toLocaleString("en-IN")}`}
+                        muted
+                      />
+                    )}
+
                     <LineItem
-                      label={`Original stay total (${pricingEstimate.totalNights} night${pricingEstimate.totalNights > 1 ? "s" : ""})`}
-                      value={`₹${(pricingEstimate.stayEstimate + pricingEstimate.extraGuestTotal).toLocaleString("en-IN")}`}
-                      muted
+                      label={`Extra adults (${pricingEstimate.extraAdults})`}
+                      value={pricingEstimate.extraAdults > 0 ? `₹${pricingEstimate.extraGuestTotal.toLocaleString("en-IN")}` : "Included"}
                     />
                     <LineItem
-                      label="Discounted stay total"
-                      value={`₹${pricingEstimate.stayEstimate.toLocaleString("en-IN")}`}
-                      highlight
+                      label={`Children (${children})`}
+                      value="Included"
                     />
                     <LineItem
-                      label="Extra Guest Charges"
-                      value={`₹${pricingEstimate.extraGuestTotal.toLocaleString("en-IN")}`}
+                      label={`Pets (${pets})`}
+                      value="Included"
                     />
                     <LineItem
                       label="Refundable Security Deposit"
@@ -898,11 +955,11 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     />
                     <div className="mt-4 rounded-xl border border-border-light bg-surface p-4 dark:bg-surface-dark/50 dark:border-border-dark">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-semibold text-text dark:text-text-inverse">Estimated Stay Total</span>
+                        <span className="text-sm font-semibold text-text dark:text-text-inverse">Estimated total</span>
                         <span className="text-base font-semibold text-primary">₹{pricingEstimate.totalPayableAfterApproval.toLocaleString("en-IN")}</span>
                       </div>
                       <p className="text-xs text-muted/70 dark:text-muted-inverse/70">
-                        Final pricing is confirmed after owner review and may vary based on stay requirements. Security deposit is refundable after checkout, subject to inspection.
+                        Includes discounted stay, extra adults, and refundable security deposit. Final pricing is confirmed after owner review.
                       </p>
                     </div>
                   </div>
@@ -981,7 +1038,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                     <div>
                       <p className="text-sm font-medium text-text dark:text-text-inverse">Owner-managed response</p>
                       <p className="text-sm text-muted dark:text-muted-inverse">
-                        The owner personally reviews every request. Most guests receive a response the same day.
+                        The owner personally reviews every request. Most guests receive a response within 2 hrs.
                       </p>
                     </div>
                   </div>
@@ -1053,8 +1110,8 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                   <div className="rounded-2xl border border-border-light bg-surface-card p-5 dark:bg-surface-dark/50 dark:border-border-dark">
                     <div className="flex items-center justify-between mb-4 pb-4 border-b border-border-light dark:border-border-dark">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-lux text-muted/50 dark:text-muted-inverse/50">Request ID</p>
-                        <p className="font-mono text-lg text-text dark:text-text-inverse">{referenceId}</p>
+                        <p className="text-xs font-semibold uppercase tracking-lux text-muted/50 dark:text-muted-inverse/50">Booking ID</p>
+                        <p className="font-mono text-lg text-text dark:text-text-inverse">{bookingId}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs font-semibold uppercase tracking-lux text-muted/50 dark:text-muted-inverse/50">Status</p>
@@ -1082,7 +1139,7 @@ export function BookingFlowModal({ isOpen, onClose, defaultPropertySlug }: Booki
                         <span className="text-muted dark:text-muted-inverse">Guests</span>
                         <span className="font-medium text-text dark:text-text-inverse text-right">
                           {totalGuests} total
-                          {totalGuests > capacity.baseGuests ? ` (${totalGuests - capacity.baseGuests} extra)` : ""}
+                          {extraAdults > 0 ? ` (${extraAdults} extra adult${extraAdults > 1 ? "s" : ""})` : ""}
                         </span>
                       </div>
                       {pricingEstimate && (

@@ -36,18 +36,13 @@ export const business = {
     "Party groups",
   ],
   highlights: [
-    "Private pool",
+    "BBQ grill",
+    "Firepit",
+    "Indoor parking on premises",
+    "Kitchen",
+    "Outdoor dining area",
     "Outdoor shower",
-    "Outdoor dining table",
-    "Fully functional kitchen",
-    "Free parking on premises",
-    "Winter firepit",
-    "Garden view",
-    "Private lawn",
-    "Pets allowed",
-    "Tree-covered walkways",
-    "Surrounded by nature",
-    "BBQ experience",
+    "Pool",
   ],
 };
 
@@ -82,10 +77,10 @@ export const pricing = {
     note: "Collected via UPI, refunded after check-out inspection",
   } as const,
   extraGuest: {
-    label: "Extra Guest",
+    label: "Extra Adult",
     amount: "₹1,500",
-    per: "per guest / per night",
-    note: "Beyond 1 extra adult over base capacity",
+    per: "per extra adult / per night",
+    note: "Beyond base capacity of 6 adults",
   } as const,
 };
 
@@ -130,7 +125,7 @@ export const policies = {
     { title: "No indoor smoking", description: "Smoking is allowed only in designated outdoor areas to preserve the estate's interiors and air quality." },
     { title: "Music cutoff at 10 PM", description: "Evenings outdoors stay peaceful for neighbors and the surrounding community after 10:00 PM." },
     { title: "Visitors until 9 PM", description: "Day guests are welcome until 9:00 PM. Overnight visitors must be pre-approved in advance." },
-    { title: "Extra guests ₹1,500 each", description: "Beyond the included capacity, each additional guest is charged ₹1,500 per night." },
+    { title: "Extra adults ₹1,500 each", description: "Beyond the included capacity, each additional adult is charged ₹1,500 per night." },
     { title: "Respect the estate", description: "Plants, furniture, art, and fixtures are part of the experience. Treat them with care." },
   ],
   bookingPolicy: [
@@ -248,7 +243,7 @@ export type Property = {
 export const properties: Property[] = [
   {
     slug: "noida-estate",
-    name: "Aviora Estate, Noida",
+    name: "Santorini Meets Noida",
     location: "Noida, India",
     status: "live",
     tagline: "A single-story sanctuary in nature.",
@@ -257,10 +252,13 @@ export const properties: Property[] = [
       "Aviora’s single-level villa blends Mediterranean simplicity with contemporary comfort across a sprawling private property. Whitewashed walls, cobalt doors and windows, and handmade tiles create a serene backdrop for a private pool, manicured gardens, and generous living spaces.",
     estateSize: business.landSize,
     highlights: [
-      "Private pool with teak deck",
-      "3 air-conditioned suites",
-      "Landscaped lawn and gardens",
-      "Mediterranean interiors",
+      "BBQ grill",
+      "Firepit",
+      "Indoor parking on premises",
+      "Kitchen",
+      "Outdoor dining area",
+      "Outdoor shower",
+      "Pool",
     ],
     heroImages: [
       {
