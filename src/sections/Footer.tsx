@@ -1,7 +1,7 @@
 "use client";
 
 import { Container } from "@/components/Container";
-import { business, pricing } from "@/lib/config";
+import { business } from "@/lib/config";
 import { MapPin, Phone, Mail, Instagram } from "lucide-react";
 
 const navLinks = [
@@ -99,20 +99,7 @@ export function Footer() {
               </li>
             </ul>
 
-            <div className="mt-8 pt-8 border-t border-border-dark">
-              {pricing.weekday.originalAmount && (
-                <p className="text-sm text-muted-inverse/60 line-through mb-1">{pricing.weekday.originalAmount}</p>
-              )}
-              <div className="flex items-center gap-3">
-                <p className="text-text-inverse font-serif text-2xl">{pricing.weekday.amount}</p>
-                <span className="inline-flex items-center rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-lux text-text-inverse">
-                  {pricing.weekday.discountPercent}% OFF
-                </span>
-              </div>
-              <p className="text-sm font-sans text-muted-inverse/70 mt-1">{pricing.weekday.per}</p>
-            </div>
-
-            <ul className="mt-6 space-y-2 text-sm text-muted-inverse/60">
+            <ul className="mt-8 pt-8 border-t border-border-dark space-y-2 text-sm text-muted-inverse/60">
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <a href={link.href} className="hover:text-text-inverse transition-colors">

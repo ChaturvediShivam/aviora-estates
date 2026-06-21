@@ -77,6 +77,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${greatVibes.variable}`} suppressHydrationWarning>
       <body className="font-sans">
         <ThemeProvider>
+          <Header />
           <main>{children}</main>
           <Footer />
           <BackToTop />
